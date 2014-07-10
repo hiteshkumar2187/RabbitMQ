@@ -1,4 +1,5 @@
 package com.rabbitmq.sample2;
+import com.rabbitmq.client.AMQP;
 import com.rabbitmq.client.ConnectionFactory;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.Channel;
@@ -6,7 +7,7 @@ import com.rabbitmq.client.QueueingConsumer;
 
 public class Recv {
 
-    private final static String QUEUE_NAME = "hello";
+    private final static String QUEUE_NAME = "Pulkit";
 
     public static void main(String[] argv) throws Exception {
 
@@ -15,11 +16,14 @@ public class Recv {
     Connection connection = factory.newConnection();
     Channel channel = connection.createChannel();
 
-    channel.queueDeclare(QUEUE_NAME, false, false, false, null);
+    AMQP.Queue.DeclareOk dok =channel.queueDeclare(QUEUE_NAME, false, false, false, null);
+    System.out.println("messgae:"+dok.getMessageCount());
     System.out.println(" [*] Waiting for messages. To exit press CTRL+C");
     
+  
+    
     QueueingConsumer consumer = new QueueingConsumer(channel);
-    channel.basicConsume(QUEUE_NAME, true, consumer);
+   // channel.basicConsume(QUEUE_NAME, true, consumer);
     
     while (true) {
       QueueingConsumer.Delivery delivery = consumer.nextDelivery();
